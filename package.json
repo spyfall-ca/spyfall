@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon index.js"
+    "dev:api": "cd server && npm run dev",
+    "dev:client": "cd client && npm start",
+    "dev": "npm run dev:api && npm run dev:client"
   },
   "repository": {
     "type": "git",
@@ -16,12 +18,5 @@
   "bugs": {
     "url": "https://github.com/spyfall-ca/spyfall/issues"
   },
-  "homepage": "https://github.com/spyfall-ca/spyfall#readme",
-  "dependencies": {
-    "express": "^4.15.2",
-    "socket.io": "^3.0.3"
-  },
-  "devDependencies": {
-    "nodemon": "^2.0.6"
-  }
+  "homepage": "https://github.com/spyfall-ca/spyfall#readme"
 }
