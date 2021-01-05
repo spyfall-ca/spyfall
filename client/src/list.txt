@@ -1,0 +1,54 @@
+/* 
+LIST:
+  - create json with all game information (locations, with roles)
+  - figure out how to store/emit game data
+  - actually get all the players in tahe room
+  - get player name
+  - get room id
+  - only host can start game functionality
+
+LATER:
+  - figure out how to send data from server
+  - figure out what to do if roles < players
+  - assign players roles
+  - generate unique code (shortform)
+  - error handling
+
+DONE:
+  - initialize the websocket
+  - redirect if successful
+  - create and finish joinRoom function
+  - finish createRoom function
+  - redirect if successful
+  - figure out a way to store the codes and socketIDs?
+  - If person disconnects handle cleanup
+  - Create room and it renders lobby page
+  - Modified lobby page
+  - design new home page in figma (with player name input on first page)
+  - do the frontend for new home page
+  - CONFIGURED THE FAVICON YAY
+  - home button on nav bar functionality
+  - display players card
+  - name card
+  - time card
+  - card that displays roomId (with copy paste functionality)
+  - start game button
+  - rules card
+*/
+
+{
+  $roomid: {
+    state: 'lobby' or 'ingame'
+    location: '',
+    players: [{
+      id: '',
+      name: '',
+      role: '',
+    }],
+    host: ''
+  },
+}
+
+{
+  $playerid: $roomid
+}
