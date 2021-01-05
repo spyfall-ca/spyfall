@@ -1,56 +1,91 @@
-import React, { useState, useEffect } from "react";
-import { useHistory } from "react-router-dom";
-import { initiateSocket } from '../sockets/Home'
+import React, { useState } from "react";
+import Card from "../components/Card";
+import Button from "../components/Button";
+import Input from "../components/Input";
+import styled from "styled-components";
 
-const Home = () => {
-  const [roomCode, setRoomCode] = useState('')
-  const history = useHistory();
+const ButtonContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  width: 100%;
+`;
+
+const InputContainer = styled.div`
+  margin-bottom: 30px;
+  width: 100%;
+`;
+
+const FormCardContainer = styled.div`
+  min-width: 400px;
+`;
+// hello :)
+
+const Home = (props) => {
+  const [roomCode, setRoomCode] = useState("");
+  const [playerName, setPlayerName] = useState("");
+  const [error, setErrors] = useState("")
+  
+  const isPlayerNameValid = () => {
+    if (playerName === '') {
+        setErrors('Invalid Name')
+        return false;
+    } else {
+        return true;
+    }
+  }
 
   const createRoom = () => {
-    const socket = initiateSocket()
-    socket.emit('createRoom')
-  }
+    if (!isPlayerNameValid()) return
+    props.socket.emit("createRoom", playerName);
+  };
 
   const joinRoom = () => {
-    const socket = initiateSocket()
-    socket.emit('joinRoom', roomCode)
-    socket.on('joinRoomSuccess', (boolean) => {
-      if (boolean === true) {
-        history.push('/Lobby')
-      }
-    })
-  }
+    if (!isPlayerNameValid()) return
+    props.socket.emit("joinRoom", roomCode, playerName);
+  };
+
+  props.socket && props.socket.on('Error', errorType => {
+    setErrors(errorType)
+  })
 
   return (
-    <div>
-      <input value={roomCode} onChange={(e) => setRoomCode(e.target.value)}></input>
-      <button onClick={() => joinRoom()}>join</button>
-      <button onClick={() => createRoom()}>create room</button>
-    </div>
+    <FormCardContainer>
+      <Card color="#FFF7B1" padding="30px">
+        <InputContainer>
+          <div style={{ marginBottom: 25 }}>
+            <Input
+              label="player name"
+              value={playerName}
+              onChange={(e) => {
+                  if(error === "Invalid Name") setErrors('')
+                  setPlayerName(e.target.value)
+              }}
+              placeholder="BillyBobJoe"
+              error={error === "Invalid Name" ? error : ''}
+            />
+          </div>
+          <Input
+            label="join a room"
+            value={roomCode}
+            onChange={(e) => {
+                if(error === "Invalid Room ID") setErrors('')
+                setRoomCode(e.target.value)}}
+            placeholder="M59Ss26jyKu..."
+            error={error === "Invalid Room ID" ? error : ''}
+          />
+        </InputContainer>
+        <ButtonContainer>
+          <Button color="#FF7272" onClick={() => joinRoom()}>
+            join room
+          </Button>
+          <Button color="#7331FF" onClick={() => createRoom()}>
+            create room
+          </Button>
+        </ButtonContainer>
+      </Card>
+    </FormCardContainer>
   );
 };
 
 export default Home;
-
-/* 
-LIST: 
-
-- finish createRoom function
-  - initialize the websocket
-  - generate unique code
-  - redirect if successful
-  - error handling
-
-- figure out a way to store the codes and socketIDs?? 
-
-- create and finish joinRoom function
-  - join someone else's room based on code
-  - redirect if successful
-  - error handling
-
-  -Home page (no sockets here)
-  -Lobby page /lobby/:roomcode
-  -Lobby page mounts -> roomcode from the url and we initialze socket and search for it, if
-   it doesnt exist route back to home and if it does we initialzie eveything
-  -Create room and it routes to lobby page
-*/
