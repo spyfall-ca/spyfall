@@ -18,5 +18,10 @@
   "bugs": {
     "url": "https://github.com/spyfall-ca/spyfall/issues"
   },
-  "homepage": "https://github.com/spyfall-ca/spyfall#readme"
+  "homepage": "https://github.com/spyfall-ca/spyfall#readme",
+  "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^1.2.32",
+    "@fortawesome/free-solid-svg-icons": "^5.15.1",
+    "@fortawesome/react-fontawesome": "^0.1.14"
+  }
 }

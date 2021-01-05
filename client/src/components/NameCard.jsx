@@ -1,12 +1,34 @@
-import React from 'react';
-import Card from './Card';
+import React from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPencilAlt } from "@fortawesome/free-solid-svg-icons";
 import styled from "styled-components";
 
-const NameCard = () => {
-    return (
-        <Card color="65FFDA">
-        </Card>
-    );
-}
+import Card from "./Card";
 
-export default NameCard
+const MainContainer = styled.div``;
+
+const CardContainer = styled.div`
+  display: flex;
+  align-items: baseline;
+  flex-direction: row;
+  justify-content: center;
+`;
+
+const NameCard = () => {
+  return (
+    <MainContainer>
+      <Card color="#C8FFF2">
+        <CardContainer>
+          <FontAwesomeIcon
+            icon={faPencilAlt}
+            size="xs"
+            style={{ marginRight: 5 }}
+          />
+          <div>BillyBobJoe</div>
+        </CardContainer>
+      </Card>
+    </MainContainer>
+  );
+};
+
+export default NameCard;

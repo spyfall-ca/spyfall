@@ -19,7 +19,6 @@ const InputContainer = styled.div`
 const FormCardContainer = styled.div`
   min-width: 400px;
 `;
-// hello :)
 
 const Home = (props) => {
   const [roomCode, setRoomCode] = useState("");
