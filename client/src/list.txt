@@ -1,18 +1,19 @@
 /* 
 LIST:
-  - create json with all game information (locations, with roles)
-  - figure out how to store/emit game data
-  - actually get all the players in tahe room
-  - get player name
-  - get room id
-  - only host can start game functionality
+  - fixing grid css
+  - fix timer bug
+  - dim background when modals appear
+  - start game functionality (assigning roles+loc)
+  - assigning location + assign players roles and assign single spy
+    - figure out what to do if roles < players
+  - dont show player on card until they are assigned a role (for joining late functionality) (only for game page??)
+  - adding pictures + modifying json
+  - showing right picture on location card
+  - showing role on role card
+  - location card for spy player frontend
 
 LATER:
-  - figure out how to send data from server
-  - figure out what to do if roles < players
-  - assign players roles
-  - generate unique code (shortform)
-  - error handling
+  - deploy (aws, docker instance) + cleanup
 
 DONE:
   - initialize the websocket
@@ -34,11 +35,27 @@ DONE:
   - card that displays roomId (with copy paste functionality)
   - start game button
   - rules card
+  - actually get all the players in tahe room
+  - get player name
+  - get room id
+  - only host can start game functionality
+  - figure out how to store/emit game data
+  - create json with all game information (locations, with roles)
+  - figure out how to send data from server
+  - game page: resuse name card, vote card, link card
+  - time card
+  - create end game button, location card (for non-spy player) and role card
+  - rules modal
+  - do css grid for game page
+  - start game functionality (starting timer, routing to correct page,
+  - end game button functionality
+  - joining late functionality 
+  - end game modal
 */
 
 {
   $roomid: {
-    state: 'lobby' or 'ingame'
+    state: 'lobby' or 'in progress'
     location: '',
     players: [{
       id: '',
@@ -47,8 +64,4 @@ DONE:
     }],
     host: ''
   },
-}
-
-{
-  $playerid: $roomid
 }

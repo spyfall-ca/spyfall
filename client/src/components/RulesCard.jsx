@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faThumbtack } from "@fortawesome/free-solid-svg-icons";
+import { faThumbtack, faTimes } from "@fortawesome/free-solid-svg-icons";
 import styled from "styled-components";
 
 import Card from "./Card";
+import Button from "./Button";
 
 const StyledTitleText = styled.div`
   font-size: 14px;
@@ -14,11 +15,25 @@ const StyledParagraphText = styled.div`
   font-size: 14px;
 `;
 
-const RulesCard = () => {
+const RulesCard = ({ isModal, showModal, setShowModal }) => {
   return (
     <Card color="#FDF292">
+      {isModal === true ? (
+        <FontAwesomeIcon
+          icon={faTimes}
+          size="xs"
+          style={{ float: "right" }}
+          onClick={() => setShowModal(!showModal)}
+        />
+      ) : (
+        ""
+      )}
       <div style={{ flexDirection: "row", display: "flex" }}>
-        <FontAwesomeIcon icon={faThumbtack} size="xs" style={{ marginRight: 8}} />
+        <FontAwesomeIcon
+          icon={faThumbtack}
+          size="xs"
+          style={{ marginRight: 8 }}
+        />
         <StyledTitleText>rules:</StyledTitleText>
       </div>
       <br />
@@ -43,6 +58,40 @@ const RulesCard = () => {
         the game.
       </StyledParagraphText>
     </Card>
+  );
+};
+
+const StyledModal = styled.div`
+  position: fixed;
+  width: 35%;
+  height: auto;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+  display: ${(props) => (props.showModal ? "block" : "none")};
+`;
+
+export const RulesButton = () => {
+  const [showModal, setShowModal] = useState(false);
+
+  return (
+    <div>
+      <StyledModal showModal={showModal}>
+        <RulesCard
+          isModal={true}
+          showModal={showModal}
+          setShowModal={setShowModal}
+        />
+      </StyledModal>
+      <Button
+        color="#FDF292"
+        textColor="black"
+        onClick={() => setShowModal(!showModal)}
+      >
+        rules
+      </Button>
+    </div>
   );
 };
 

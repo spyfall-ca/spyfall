@@ -29,12 +29,12 @@ const copyToClipboard = (text) => {
   ta.remove();
 };
 
-const RoomCodeCard = () => {
+const RoomCodeCard = ({ gameData }) => {
   const [color, setColor] = React.useState('#FED1FF')
   const [icon, setIcon] = React.useState(faCopy)
 
   const handleCopy = () => {
-    copyToClipboard("5xng6P5iZ4Yck2YuAAAD")
+    copyToClipboard(gameData.host)
     setColor('#CCFFAD')
     setIcon(faCheck)
     setTimeout(() => {
@@ -46,7 +46,7 @@ const RoomCodeCard = () => {
     <ClickableContainer onClick={() => handleCopy()}>
         <Card color={color}>
             <CardContainer>
-                <div>5xng6P5iZ4Yck2YuAAAD</div>
+                <div>{gameData.host}</div>
                 <FontAwesomeIcon
                     icon={icon}
                     size="xs"

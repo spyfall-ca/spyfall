@@ -75,11 +75,11 @@ const Home = (props) => {
           />
         </InputContainer>
         <ButtonContainer>
-          <Button color="#FF7272" onClick={() => joinRoom()}>
-            join room
-          </Button>
           <Button color="#7331FF" onClick={() => createRoom()}>
             create room
+          </Button>
+          <Button color="#FF7272" onClick={() => joinRoom()}>
+            join room
           </Button>
         </ButtonContainer>
       </Card>

@@ -1,0 +1,82 @@
+[
+    {
+        "location": "Beach",
+        "roles": ["Lifeguard", "Tourist", "Scuba diver", "Pro surfer", "Lemonade seller", "Local", "Ice-cream vendor", "Photographer", "Pro swimmer", "Sailor"],
+        "image": ""
+    },
+    {
+        "location": "Restaurant",
+        "roles": ["Executive Chef", "Sous Chef", "Customer", "Waitress", "Waiter", "Cashier", "Pastry Chef", "Cook", "Dishwasher", "Manager"],
+        "image": ""
+    },
+    {
+        "location": "Airplane",
+        "roles": ["Co-Pilot", "Flight Attendant", "CEO", "Photographer", "Doctor", "Baby", "Travel Blogger", "Co-Pilot", "Celebrity"],
+        "image": ""
+    },
+    {
+        "location": "Hospital",
+        "roles": ["Doctor", "Surgeon", "Anesthesiologist", "Security Guard", "Janitor", "Patient", "Visitor", "Receptionist", "Paramedic", "Baby"],
+        "image": ""
+    },
+    {
+        "location": "School",
+        "roles": ["Teacher", "Principal", "Parent", "Basketball Coach", "Officer", "Motivational Speaker", "Janitor", "Substitute Teacher", "School Nurse", "Student"],
+        "image": ""
+    },
+    {
+        "location": "Mars Station",
+        "roles": ["Biologist", "Physicist", "Cosmonaut", "Mathematician","Alien", "Visitor", "Elon Musk", "Aerospace Engineer", "Mechanical Engineer", "Technician"],
+        "image": ""
+    },
+    {
+        "location": "Cruise Line",
+        "roles": ["Captain", "Security Guard", "Tourist", "Kim Kardashian", "Dad", "Chef", "Tour Guide", "YouTube Vlogger", "Room Attendant", "Mom"],
+        "image": ""
+    },
+    {
+        "location": "Movie Set",
+        "roles": ["Actor", "Actress", "Stunt Double", "Director", "Camera Operator", "Writer", "Costume Artist", "Audio Engineer", "VFX Engineer", "Makeup Artist", "Extra"],
+        "image": ""
+    },
+    {
+        "location": "White House",
+        "roles": ["President", "Security Guard", "Secret Service", "CIA Agent", "Military Officer", "Visitor", "Politician", "Minister of Health", "First Lady", "Cleaning Staff", "Vice President"],
+        "image": ""
+    },
+    {
+        "location": "Circus Tent",
+        "roles": ["Clown", "Acrobat", "Popcorn Vendor", "Lion", "Animal Trainer", "Juggler", "Tightrope Walker", "Magician", "Unicyclist", "Kid"],
+        "image": ""
+    },
+    {
+        "location": "Amusement Park",
+        "roles": ["Visitor", "Ride Operator", "Nurse", "Funnelcake Vendor", "Carnival Game Operator", "Lifeguard", "Parking Attendant", "Ticket Seller", "Travel Blogger", "Inspection Engineer"],
+        "image": ""
+    },
+    {
+        "location": "Wedding Venue",
+        "roles": ["Photographer", "Bride", "Groom", "Ring Bearer", "Guest", "Party Crasher", "Priest", "Wedding Coordinator", "Caterer", "Limousine Driver", "Best Man", "Bridesmaid"],
+        "image": ""
+    },
+    {
+        "location": "Prison",
+        "roles": ["Prisoner", "Correctional Officer", "Lunch Lady", "Warden", "Commissary Seller", "Chaplain", "Doctor", "Psychologist", "Lawyer", "Visitor"],
+        "image": ""
+    },
+    {
+        "location": "NBA Court",
+        "roles": ["NBA Player", "Coach", "Referree", "Team Manager", "Spectator", "Waterboy", "Hotdog Vendor", "Celebrity", "Sports Reporter", "Ticket Collector"],
+        "image": ""
+    },
+    {
+        "location": "Concert Stadium",
+        "roles": ["Song Artist", "Background Dancer", "Audio Specialist", "Drummer", "Costume Artist", "Fan", "Videographer", "Lights Specialist", "Entrance Guard", "Event Coordinator"],
+        "image": ""
+    },
+    {
+        "location": "Ski Resort",
+        "roles": ["Ski Instructor", "Ski Rental Employee", "Lift Operants", "Beginner", "Olympic Skiier", "Plow Truck Operator", "Paramedic", "Cafeteria Employee", "Lodge Attendant", "Custodian", "Technician", "Ski Patrol"],
+        "image": ""
+    }
+]

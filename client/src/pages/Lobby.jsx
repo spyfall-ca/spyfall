@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 
+import Game from "./Game";
 import PlayersCard from "../components/PlayersCard";
 import NameCard from "../components/NameCard";
 import TimeCard from "../components/TimeCard";
@@ -10,7 +11,7 @@ import Button from "../components/Button";
 
 const LobbyContainer = styled.div`
   display: grid;
-  grid-template-columns: 25% 75%;
+  grid-template-columns: 30% 75%;
   grid-template-rows: 15% 75%;
   max-width: 750px;
   align-content: stretch;
@@ -18,23 +19,16 @@ const LobbyContainer = styled.div`
   row-gap: 10px;
 `;
 
-const NameCardContainer = styled.div`
-  grid-column-start: 1;
-  grid-column-end: 2;
+const TopButtonsContainer = styled.div`
+  grid-column-start: 2;
+  grid-column-end: 3;
   grid-row-start: 1;
   grid-row-end: 2;
 `;
 
-const PlayerCardContainer = styled.div`
+const NameCardContainer = styled.div`
   grid-column-start: 1;
   grid-column-end: 2;
-  grid-row-start: 2;
-  grid-row-end: 3;
-`;
-
-const TopButtonsContainer = styled.div`
-  grid-column-start: 2;
-  grid-column-end: 3;
   grid-row-start: 1;
   grid-row-end: 2;
 `;
@@ -56,29 +50,50 @@ const StyledText = styled.div`
   font-size: 20px;
 `;
 
-const TopButtons = () => {
-  return (
-    <ButtonContainer>
-      <RoomCodeCard />
-      <TimeCard />
-      <Button color="#7331FF">
-        <StyledText>start game</StyledText>
-      </Button>
-    </ButtonContainer>
-  );
-};
+const PlayersCardContainer = styled.div`
+  grid-column-start: 1;
+  grid-column-end: 2;
+  grid-row-start: 2;
+  grid-row-end: 3;
+  align-self: stretch;
+`;
 
-const Lobby = () => {
-  return (
+const Lobby = ({ socket, gameData }) => {
+  const [startGame, setStartGame] = useState(false);
+
+  socket.on("startGameSuccess", (boolean) => {
+    console.log("YOOOOO")
+    setStartGame(boolean);
+  });
+
+  const TopButtons = ({ socket, gameData }) => {
+    return (
+      <ButtonContainer>
+        <RoomCodeCard gameData={gameData} />
+        <TimeCard />
+        <Button
+          color="#7331FF"
+          disabled={socket.id === gameData.host ? false : true}
+          onClick={() => socket.emit("startGame")}
+        >
+          <StyledText>start game</StyledText>
+        </Button>
+      </ButtonContainer>
+    );
+  };
+
+  return startGame === true ? (
+    <Game socket={socket} gameData={gameData} />
+  ) : (
     <LobbyContainer>
       <NameCardContainer>
-        <NameCard />
+        <NameCard socket={socket} gameData={gameData} />
       </NameCardContainer>
-      <PlayerCardContainer>
-        <PlayersCard />
-      </PlayerCardContainer>
+      <PlayersCardContainer>
+        <PlayersCard socket={socket} gameData={gameData} />
+      </PlayersCardContainer>
       <TopButtonsContainer>
-        <TopButtons />
+        <TopButtons socket={socket} gameData={gameData} />
       </TopButtonsContainer>
       <RulesCardContainer>
         <RulesCard />
