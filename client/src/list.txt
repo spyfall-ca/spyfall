@@ -55,6 +55,7 @@ DONE:
   - joining late modal
   - dont show player on card until they are assigned a role (for joining late functionality) (only for game page??)
   - FIX GRID
+  - footer
 */
 
 {
