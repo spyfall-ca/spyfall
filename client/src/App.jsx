@@ -3,8 +3,8 @@ import { initiateSocket } from "./sockets";
 import Lobby from "./pages/Lobby";
 import Home from "./pages/Home";
 import Navbar from "./components/Navbar";
-import Title from "./components/Title"
-import styled, { css } from "styled-components";
+import Title from "./components/Title";
+import styled from "styled-components";
 
 const ContentContainer = styled.div`
   display: flex;
@@ -15,22 +15,40 @@ const ContentContainer = styled.div`
 const App = () => {
   const [joinedRoom, setJoinedRoom] = useState(false);
   const [socket, setSocket] = useState(null);
+  const [gameData, setGameData] = useState(null);
+  const [showInProgressModal, setShowInProgressModal] = useState(false);
 
   useEffect(() => {
     setSocket(initiateSocket());
   }, []);
 
-  socket &&
+  if (socket) {
     socket.on("joinRoomSuccess", (boolean) => {
+      if (gameData && gameData.inProgress) {
+        setShowInProgressModal(true);
+      }
       setJoinedRoom(boolean);
     });
+    socket.on("sendGameState", (gameState) => {
+      setGameData(gameState);
+    });
+  }
 
   return (
     <div>
       <Navbar socket={socket} />
       <ContentContainer>
         <Title />
-        {joinedRoom ? <Lobby /> : <Home socket={socket} />}
+        {joinedRoom && gameData ? (
+          <Lobby
+            socket={socket}
+            gameData={gameData}
+            showInProgressModal={showInProgressModal}
+            setShowInProgressModal={setShowInProgressModal}
+          />
+        ) : (
+          <Home socket={socket} />
+        )}
       </ContentContainer>
     </div>
   );

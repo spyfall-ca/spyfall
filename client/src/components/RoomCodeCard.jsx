@@ -18,6 +18,7 @@ const ClickableContainer = styled.div`
     cursor: pointer;
     opacity: 1;
   }
+  height: 100%;
 `;
 
 const copyToClipboard = (text) => {
@@ -29,12 +30,12 @@ const copyToClipboard = (text) => {
   ta.remove();
 };
 
-const RoomCodeCard = () => {
+const RoomCodeCard = ({ gameData }) => {
   const [color, setColor] = React.useState('#FED1FF')
   const [icon, setIcon] = React.useState(faCopy)
 
   const handleCopy = () => {
-    copyToClipboard("5xng6P5iZ4Yck2YuAAAD")
+    copyToClipboard(gameData.host)
     setColor('#CCFFAD')
     setIcon(faCheck)
     setTimeout(() => {
@@ -44,9 +45,9 @@ const RoomCodeCard = () => {
   }
   return (
     <ClickableContainer onClick={() => handleCopy()}>
-        <Card color={color}>
+        <Card color={color} height="100%">
             <CardContainer>
-                <div>5xng6P5iZ4Yck2YuAAAD</div>
+                <div>{gameData.host}</div>
                 <FontAwesomeIcon
                     icon={icon}
                     size="xs"

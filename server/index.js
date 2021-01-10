@@ -4,7 +4,6 @@ const socketIo = require("socket.io")
 
 const port = process.env.PORT || 5000
 const router = require('./router')
-
 const app = express()
 app.use(router)
 
@@ -18,32 +17,79 @@ const io = socketIo(server, {
 })
 
 const rooms = {}
-const players = {}
+const locationRoleFile = require("./locationAndRoles.json")
 
-const leaveGameCleanup = (socket) => {
+const shuffleArray = (a) => {
+  var j, x, i;
+    for (i = a.length - 1; i > 0; i--) {
+        j = Math.floor(Math.random() * (i + 1));
+        x = a[i];
+        a[i] = a[j];
+        a[j] = x;
+    }
+    return a;
+}
 
-  // getting the room ID from players object
-  const roomID = players[socket.id]
-  
-  if (roomID) {
-    const room = rooms[roomID]
+const getRandomInt = (num) => {
+  return Math.floor(Math.random() * Math.floor(num));
+}
+
+const getLocation = () => {
+  let index = getRandomInt(locationRoleFile.length)
+  let location = locationRoleFile[index]
+  return location
+}
+
+const leaveGameCleanup = (socket, roomCode) => {
+
+  // check to see if player joined room
+  if (rooms[socket.hostID]) {
 
     // check to see if player is host 
-    if (room.host === socket.id) {
-      
-      // redirecting all players to home page
-      socket.to(socket.id).emit("joinRoomSuccess", false)
+    if (socket.hostID === socket.id) hostLeaveGameCleanup(socket)
+    else playerLeaveGameCleanup(socket, roomCode)
 
-      // delete entire room object 
-      delete rooms[roomID]
-    } 
-    else { 
+    socket.hostID = undefined
+  }
+}
 
-      // deleting players information from room object
-      let result = room.players.filter(player => player.id !== socket.id)
-      rooms[roomID].players = result
-    }
-    delete players[socket.id]
+const hostLeaveGameCleanup = (socket) => {
+
+  // redirecting all players to home page
+  try {
+    io.in(socket.hostID).emit("startGameSuccess", false)
+    io.in(socket.hostID).emit("joinRoomSuccess", false)
+    io.in(socket.hostID).emit("sendGameState", null)
+  }
+  catch (error) {
+    console.log(error)
+  }
+
+  delete rooms[socket.hostID]
+}
+
+const playerLeaveGameCleanup = (socket, roomCode) => {
+  
+  // redirecting player 
+  try {
+    socket.emit("startGameSuccess", false)
+    socket.emit("joinRoomSuccess", false)
+  }
+  catch (error) {
+    console.log(error)
+  }
+
+  // deleting players information from room object
+  let result = rooms[socket.hostID].players.filter(player => player.id !== socket.id)
+  rooms[socket.hostID].players = result
+
+  // sending updated player list and leaving the channel
+  try {
+    io.in(socket.hostID).emit("sendGameState", rooms[socket.hostID])
+    socket.leave(roomCode)
+  } 
+  catch (error) {
+    console.log(error)
   }
 }
 
@@ -51,46 +97,107 @@ io.on("connection", (socket) => {
   console.log("a user connected", socket.id, socket.rooms);
 
   socket.on("createRoom", (playerName) => {
+    rooms[socket.id] = {
+      players: [{
+        id: socket.id,
+        name: playerName
+      }],
+      host: socket.id,
+      inProgress: false, 
+    }
     try {
-      if (socket.id) {
-        rooms[socket.id] = {
-          players: [{
-            id: socket.id,
-            name: playerName
-          }],
-          host: socket.id
-        }
-        players[socket.id] = socket.id 
-        socket.emit("joinRoomSuccess", true)
-        console.log("ROOMSOBJECT", rooms)
-        console.log("CREATE", socket.id, socket.rooms)
-      }
-    } catch (err) {
+      socket.hostID = socket.id
+      socket.emit("sendGameState", rooms[socket.hostID])
+      socket.emit("joinRoomSuccess", true)
+    } catch (err) { 
       console.log(err)
       socket.emit("joinRoomSucess", false)
     }
   })
-  
+
   socket.on("joinRoom", (roomCode, playerName) => {
-    try {
-      if (rooms[roomCode]) {
-        rooms[roomCode]["players"].push({
-          id: socket.id,
-          name: playerName,
-        })
-        players[socket.id] = roomCode
+    if (rooms[roomCode]) {
+      rooms[roomCode]["players"].push({
+        id: socket.id,
+        name: playerName,
+      })
+      socket.hostID = roomCode
+      try {
         socket.join(roomCode);
+        io.in(socket.hostID).emit("sendGameState", rooms[roomCode]) 
         socket.emit("joinRoomSuccess", true)
-        
-        console.log("JOIN", socket.id, socket.rooms)
-        console.log("ROOMS", rooms, rooms[roomCode]["players"])
-      } else {
-        socket.emit("Error", "Invalid Room ID")
+      } catch (err) { 
+        console.log(err)
+      } 
+    } else {
+      socket.emit("Error", "Invalid Room ID")
+    }
+  })
+
+  socket.on("startGame", () => {
+
+    // getting the location and roles
+    const locationData = getLocation()
+    const rolesArray = shuffleArray(locationData.roles)
+
+    // saving location and image name in object
+    rooms[socket.hostID].location = locationData.location
+    rooms[socket.hostID].image = locationData.image
+
+    // getting the players
+    let players = rooms[socket.hostID].players
+
+    // assign spy
+    let spyIndex = getRandomInt(players.length)
+    players[spyIndex].role = "Spy"
+
+    // assigning the rest of the roles
+    let j = 0;
+    for (let i = 0; i < players.length; i++) { 
+      if (i !== spyIndex) {
+        rooms[socket.hostID].players[i]["role"] = rolesArray[j]
       }
-    } catch (err) { 
-      console.log(err)
-      socket.emit("joinRoomSuccess", false)
+      j++;
+      if (j >= rolesArray.length) j = 0;
+    }
+
+    rooms[socket.hostID].inProgress = true;
+
+    // send data and navigate all players to game page
+    try {
+      io.in(socket.hostID).emit("sendGameState", rooms[socket.hostID])  
+      io.in(socket.hostID).emit("startGameSuccess", true)
     } 
+    catch (error) {
+      console.log(error)
+    }
+  })
+
+  socket.on("startNewGame", () => {
+
+    rooms[socket.hostID].inProgress = false;
+    const playersList = rooms[socket.hostID].players
+    let spy;
+
+    // finding spy and resetting roles
+    for (let i=0; i < playersList.length; i++) {
+      if (playersList[i].role === "Spy") {
+        spy = playersList[i].name
+      }
+      rooms[socket.hostID].players[i].role = undefined
+    }
+
+    try {
+
+      // redirecting all players to the lobby page
+      io.in(socket.hostID).emit("revealSpy", spy)
+      io.in(socket.hostID).emit("sendGameState", rooms[socket.hostID])
+      io.in(socket.hostID).emit("startGameSuccess", false)
+    }
+    catch (error) {
+      console.log(error)
+    }
+
   })
   
   socket.on("disconnect", () => {
@@ -99,11 +206,9 @@ io.on("connection", (socket) => {
   });
 
   socket.on("leaveGame", () => {
-    const roomCode = players[socket.id]
+    const roomCode = socket.hostID
     if (roomCode) {
-      socket.leave(roomCode)
-      socket.emit('joinRoomSuccess', false)
-      leaveGameCleanup(socket)
+      leaveGameCleanup(socket, roomCode) 
     }
   })
 });

@@ -1,18 +1,10 @@
 /* 
 LIST:
-  - create json with all game information (locations, with roles)
-  - figure out how to store/emit game data
-  - actually get all the players in tahe room
-  - get player name
-  - get room id
-  - only host can start game functionality
+  - deploy (aws, docker instance)
 
 LATER:
-  - figure out how to send data from server
-  - figure out what to do if roles < players
-  - assign players roles
-  - generate unique code (shortform)
-  - error handling
+  - cleanup index.js
+  - we're almost done!!!
 
 DONE:
   - initialize the websocket
@@ -21,7 +13,7 @@ DONE:
   - finish createRoom function
   - redirect if successful
   - figure out a way to store the codes and socketIDs?
-  - If person disconnects handle cleanup
+  - If person disconnects handle cleanup - worst thing to handle ever WHY?
   - Create room and it renders lobby page
   - Modified lobby page
   - design new home page in figma (with player name input on first page)
@@ -34,21 +26,46 @@ DONE:
   - card that displays roomId (with copy paste functionality)
   - start game button
   - rules card
+  - actually get all the players in tahe room
+  - get player name
+  - get room id
+  - only host can start game functionality
+  - figure out how to store/emit game data
+  - create json with all game information (locations, with roles)
+  - figure out how to send data from server
+  - game page: resuse name card, vote card, link card
+  - time card
+  - create end game button, location card (for non-spy player) and role card
+  - rules modal
+  - do css grid for game page
+  - start game functionality (starting timer, routing to correct page,
+  - end game button functionality
+  - joining late functionality 
+  - end game modal
+  - fixing grid css
+  - start game functionality (assigning roles+loc)
+  - assigning location + assign players roles and assign single spy
+  - figure out what to do if roles < players
+  - fix timer bug
+  - showing role on role card
+  - adding pictures + modifying json
+  - showing right picture on location card
+  - location card for spy player frontend
+  - dim background when modals appear
+  - joining late modal
+  - dont show player on card until they are assigned a role (for joining late functionality) (only for game page??)
+  - FIX GRID
 */
 
 {
   $roomid: {
-    state: 'lobby' or 'ingame'
+    inProgress: true or false
     location: '',
     players: [{
       id: '',
       name: '',
       role: '',
     }],
-    host: ''
+    host: $hostID
   },
-}
-
-{
-  $playerid: $roomid
 }
