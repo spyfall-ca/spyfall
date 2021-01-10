@@ -1,7 +1,7 @@
 import React from "react";
 import Card from "./Card";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUserAlt, faUserEdit } from "@fortawesome/free-solid-svg-icons";
+import { faCrown, faGamepad } from "@fortawesome/free-solid-svg-icons";
 import styled from "styled-components";
 
 const PlayersHeader = styled.div`
@@ -25,29 +25,32 @@ const NameContainer = styled.div`
 const Name = styled.div`
   font-size: 20px;
   margin-left: 5px;
+  color: ${props => props.role ? 'black': 'dimGrey'};
 `;
 
 const PlayersCard = ({ gameData }) => {
-  const renderPlayerName = (name, id) => (
+  const renderPlayerName = (player) => (
     <NameContainer>
-      {id === gameData.host ? (
-        <FontAwesomeIcon icon={faUserEdit} size="xs" />
-      ) : (
-        <FontAwesomeIcon icon={faUserAlt} size="xs" />
-      )}
-      <Name>{name}</Name>
+      {player.id === gameData.host ? (
+        <FontAwesomeIcon icon={faCrown} size="xs" color="gold" />
+      ) : (player.role === undefined) ?
+        <FontAwesomeIcon icon={faGamepad} size="xs" color="dimGrey" />
+        :
+        <FontAwesomeIcon icon={faGamepad} size="xs" />
+      }
+      <Name role={player.role}>{player.name}</Name>
     </NameContainer>
   );
 
   return (
-    <Card color="#FF9E9E" padding="20px" height="100%" overflowY={"scroll"}>
-      <PlayersHeader>players</PlayersHeader>
-      <PlayerNamesContainer>
-        {gameData.players.map((player) =>
-          renderPlayerName(player.name, player.id)
-        )}
-      </PlayerNamesContainer>
-    </Card>
+      <Card color="#FF9E9E" padding="20px" height="100%" overflowY={"scroll"}>
+        <PlayersHeader>players</PlayersHeader>
+        <PlayerNamesContainer>
+          {gameData.players.map((player) =>
+            renderPlayerName(player)
+          )}
+        </PlayerNamesContainer>
+      </Card>
   );
 };
 

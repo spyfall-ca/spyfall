@@ -10,10 +10,15 @@ const CardStyle = styled.div`
   transition: all 0.1s ease;
   font-size: ${(props) => (props.fontSize ? props.fontSize : "20px")};
   height: ${(props) => (props.height ? props.height : "")};
+  width: ${(props) => (props.width ? props.width : "")};
   overflow-y: ${(props) => (props.overflowY ? props.overflowY : "")};
   ::-webkit-scrollbar {
     width: 10px;
   }
+  max-height: ${(props) => (props.maxHeight ? props.maxHeight: "")};
+  min-height: ${(props) => (props.minHeight ? props.minHeight: "")};
+
+  box-sizing: border-box;
 
   /* Track */
   ::-webkit-scrollbar-track {
@@ -39,8 +44,11 @@ const Card = ({
   hideShadow,
   padding,
   height,
+  width,
   overflowY,
   fontSize,
+  minHeight,
+  maxHeight
 }) => {
   return (
     <CardStyle
@@ -48,8 +56,11 @@ const Card = ({
       hideShadow={hideShadow}
       padding={padding}
       height={height}
+      width={width}
       overflowY={overflowY}
       fontSize={fontSize}
+      minHeight={minHeight}
+      maxHeight={maxHeight}
     >
       {children}
     </CardStyle>

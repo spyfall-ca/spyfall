@@ -1,19 +1,10 @@
 /* 
 LIST:
-  - fixing grid css
-  - fix timer bug
-  - dim background when modals appear
-  - start game functionality (assigning roles+loc)
-  - assigning location + assign players roles and assign single spy
-    - figure out what to do if roles < players
-  - dont show player on card until they are assigned a role (for joining late functionality) (only for game page??)
-  - adding pictures + modifying json
-  - showing right picture on location card
-  - showing role on role card
-  - location card for spy player frontend
+  - deploy (aws, docker instance)
 
 LATER:
-  - deploy (aws, docker instance) + cleanup
+  - cleanup index.js
+  - we're almost done!!!
 
 DONE:
   - initialize the websocket
@@ -22,7 +13,7 @@ DONE:
   - finish createRoom function
   - redirect if successful
   - figure out a way to store the codes and socketIDs?
-  - If person disconnects handle cleanup
+  - If person disconnects handle cleanup - worst thing to handle ever WHY?
   - Create room and it renders lobby page
   - Modified lobby page
   - design new home page in figma (with player name input on first page)
@@ -51,17 +42,30 @@ DONE:
   - end game button functionality
   - joining late functionality 
   - end game modal
+  - fixing grid css
+  - start game functionality (assigning roles+loc)
+  - assigning location + assign players roles and assign single spy
+  - figure out what to do if roles < players
+  - fix timer bug
+  - showing role on role card
+  - adding pictures + modifying json
+  - showing right picture on location card
+  - location card for spy player frontend
+  - dim background when modals appear
+  - joining late modal
+  - dont show player on card until they are assigned a role (for joining late functionality) (only for game page??)
+  - FIX GRID
 */
 
 {
   $roomid: {
-    state: 'lobby' or 'in progress'
+    inProgress: true or false
     location: '',
     players: [{
       id: '',
       name: '',
       role: '',
     }],
-    host: ''
+    host: $hostID
   },
 }

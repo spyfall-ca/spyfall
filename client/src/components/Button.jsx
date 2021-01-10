@@ -13,12 +13,13 @@ const StyledButton = styled.div`
   text-align: center;
   font-weight: 100;
   pointer-events: ${(props) => (props.disabled === true ? "none" : "")};
+  height: ${props => props.height ? props.height : ''};
 `;
 
-const Button = ({ children, color, onClick, disabled, textColor, fontSize, padding }) => {
+const Button = ({ children, color, onClick, disabled, textColor, fontSize, padding, height }) => {
   return (
-    <StyledButton onClick={onClick} disabled={disabled} textColor={textColor}>
-      <Card color={disabled ? "#808080" : color} hideShadow={true} fontSize={fontSize} padding={padding}>
+    <StyledButton onClick={onClick} disabled={disabled} textColor={textColor} height={height}>
+      <Card color={disabled ? "#808080" : color} fontSize={fontSize} padding={padding} height={height}>
         {children}
       </Card>
     </StyledButton>

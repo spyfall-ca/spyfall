@@ -16,6 +16,7 @@ const App = () => {
   const [joinedRoom, setJoinedRoom] = useState(false);
   const [socket, setSocket] = useState(null);
   const [gameData, setGameData] = useState(null);
+  const [showInProgressModal, setShowInProgressModal] = useState(false);
 
   useEffect(() => {
     setSocket(initiateSocket());
@@ -23,13 +24,14 @@ const App = () => {
 
   if (socket) {
     socket.on("joinRoomSuccess", (boolean) => {
-      console.log(socket)
+      if (gameData && gameData.inProgress) {
+        setShowInProgressModal(true);
+      }
       setJoinedRoom(boolean);
-    })
+    });
     socket.on("sendGameState", (gameState) => {
-      console.log("GAME STATE", gameState)
       setGameData(gameState);
-    })
+    });
   }
 
   return (
@@ -37,7 +39,16 @@ const App = () => {
       <Navbar socket={socket} />
       <ContentContainer>
         <Title />
-        {joinedRoom && gameData ? <Lobby socket={socket} gameData={gameData} /> : <Home socket={socket} />}
+        {joinedRoom && gameData ? (
+          <Lobby
+            socket={socket}
+            gameData={gameData}
+            showInProgressModal={showInProgressModal}
+            setShowInProgressModal={setShowInProgressModal}
+          />
+        ) : (
+          <Home socket={socket} />
+        )}
       </ContentContainer>
     </div>
   );

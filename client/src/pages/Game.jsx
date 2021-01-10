@@ -9,13 +9,12 @@ import CountdownCard from "../components/CountdownCard";
 import { RulesButton } from "../components/RulesCard";
 import RoleCard from "../components/RoleCard";
 import EndGameCard from "../components/EndGameCard";
-import Button from "../components/Button";
-
-const StyledText = styled.div`
-  font-size: 20px;
-`;
+import SpyLocationCard from "../components/SpyLocationCard";
 
 const Game = ({ socket, gameData }) => {
+
+  const player = gameData.players.find((player) => player.id === socket.id);
+
   return (
     <GameContainer>
       <NameCardContainer>
@@ -25,7 +24,11 @@ const Game = ({ socket, gameData }) => {
         <PlayersCard socket={socket} gameData={gameData} />
       </PlayersCardContainer>
       <LocationCardContainer>
-        <PlayerLocationCard socket={socket} gameData={gameData} />
+        {player.role === "Spy" ? (
+          <SpyLocationCard gameData={gameData} />
+        ) : (
+          <PlayerLocationCard gameData={gameData} />
+        )}
       </LocationCardContainer>
       <RoomCodeCardContainer>
         <RoomCodeCard gameData={gameData} />
@@ -37,7 +40,7 @@ const Game = ({ socket, gameData }) => {
         <RulesButton />
       </RulesButtonContainer>
       <RoleCardContainer>
-        <RoleCard />
+        <RoleCard gameData={gameData} socket={socket} />
       </RoleCardContainer>
       <EndGameButtonContainer>
         <EndGameCard socket={socket} gameData={gameData} />
@@ -48,14 +51,12 @@ const Game = ({ socket, gameData }) => {
 
 const GameContainer = styled.div`
   display: grid;
-  grid-template-columns: 30% 45% 30%;
-  grid-template-rows: fit-content(10%) fit-content(10%) fit-content(50%) fit-content(
-      10%
-    );
-  max-width: 750px;
-  align-content: stretch;
-  column-gap: 15px;
+  grid-template-columns: 1fr 2fr 1fr;
+  grid-template-rows: 1fr 1fr 4fr 1fr;
+  column-gap: 20px;
   row-gap: 10px;
+  height: 410px;
+  max-width: 750px;
 `;
 
 const NameCardContainer = styled.div`
@@ -77,7 +78,6 @@ const LocationCardContainer = styled.div`
   grid-column-end: 3;
   grid-row-start: 1;
   grid-row-end: 4;
-  height: 100%;
 `;
 
 const RoomCodeCardContainer = styled.div`

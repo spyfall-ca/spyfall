@@ -17,6 +17,28 @@ const io = socketIo(server, {
 })
 
 const rooms = {}
+const locationRoleFile = require("./locationAndRoles.json")
+
+const shuffleArray = (a) => {
+  var j, x, i;
+    for (i = a.length - 1; i > 0; i--) {
+        j = Math.floor(Math.random() * (i + 1));
+        x = a[i];
+        a[i] = a[j];
+        a[j] = x;
+    }
+    return a;
+}
+
+const getRandomInt = (num) => {
+  return Math.floor(Math.random() * Math.floor(num));
+}
+
+const getLocation = () => {
+  let index = getRandomInt(locationRoleFile.length)
+  let location = locationRoleFile[index]
+  return location
+}
 
 const leaveGameCleanup = (socket, roomCode) => {
 
@@ -71,24 +93,8 @@ const playerLeaveGameCleanup = (socket, roomCode) => {
   }
 }
 
-const startTimer = (socket) => {
-  let time = 480
-
-  const countDown = setInterval(() => {
-    io.in(socket.hostID).emit("countdown", time)
-    time--
-    if(time < 0) {
-      clearInterval(countDown)
-    }
-  }, 1000)
-}
-
 io.on("connection", (socket) => {
   console.log("a user connected", socket.id, socket.rooms);
-
-  socket.onAny(() => {
-    console.log("ROOMS", rooms)
-  })
 
   socket.on("createRoom", (playerName) => {
     rooms[socket.id] = {
@@ -96,7 +102,8 @@ io.on("connection", (socket) => {
         id: socket.id,
         name: playerName
       }],
-      host: socket.id
+      host: socket.id,
+      inProgress: false, 
     }
     try {
       socket.hostID = socket.id
@@ -128,36 +135,69 @@ io.on("connection", (socket) => {
   })
 
   socket.on("startGame", () => {
+
+    // getting the location and roles
+    const locationData = getLocation()
+    const rolesArray = shuffleArray(locationData.roles)
+
+    // saving location and image name in object
+    rooms[socket.hostID].location = locationData.location
+    rooms[socket.hostID].image = locationData.image
+
+    // getting the players
+    let players = rooms[socket.hostID].players
+
     // assign spy
-    
-  /* random num = random(0, num(locations))
-  location = locations[num]
+    let spyIndex = getRandomInt(players.length)
+    players[spyIndex].role = "Spy"
 
-  random num = random(0, num(players))
-  player[num].role = spy
-
-  [role1, role2, role3, role4]
-
-  [role2, role3]
-
-  loop through players {
-    if they dont have role {
-      player[i].role = randomRoles[counter]
-      counter++
+    // assigning the rest of the roles
+    let j = 0;
+    for (let i = 0; i < players.length; i++) { 
+      if (i !== spyIndex) {
+        rooms[socket.hostID].players[i]["role"] = rolesArray[j]
+      }
+      j++;
+      if (j >= rolesArray.length) j = 0;
     }
-  } */
 
-    // assign roles
-    
-    // navigate all players to game page 
-    io.in(socket.hostID).emit("startGameSuccess", true)
+    rooms[socket.hostID].inProgress = true;
 
-    // start timer 
-    startTimer(socket);
+    // send data and navigate all players to game page
+    try {
+      io.in(socket.hostID).emit("sendGameState", rooms[socket.hostID])  
+      io.in(socket.hostID).emit("startGameSuccess", true)
+    } 
+    catch (error) {
+      console.log(error)
+    }
   })
 
   socket.on("startNewGame", () => {
-    io.in(socket.hostID).emit("startGameSuccess", false)
+
+    rooms[socket.hostID].inProgress = false;
+    const playersList = rooms[socket.hostID].players
+    let spy;
+
+    // finding spy and resetting roles
+    for (let i=0; i < playersList.length; i++) {
+      if (playersList[i].role === "Spy") {
+        spy = playersList[i].name
+      }
+      rooms[socket.hostID].players[i].role = undefined
+    }
+
+    try {
+
+      // redirecting all players to the lobby page
+      io.in(socket.hostID).emit("revealSpy", spy)
+      io.in(socket.hostID).emit("sendGameState", rooms[socket.hostID])
+      io.in(socket.hostID).emit("startGameSuccess", false)
+    }
+    catch (error) {
+      console.log(error)
+    }
+
   })
   
   socket.on("disconnect", () => {

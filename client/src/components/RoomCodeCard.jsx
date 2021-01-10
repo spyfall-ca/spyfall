@@ -18,6 +18,7 @@ const ClickableContainer = styled.div`
     cursor: pointer;
     opacity: 1;
   }
+  height: 100%;
 `;
 
 const copyToClipboard = (text) => {
@@ -44,7 +45,7 @@ const RoomCodeCard = ({ gameData }) => {
   }
   return (
     <ClickableContainer onClick={() => handleCopy()}>
-        <Card color={color}>
+        <Card color={color} height="100%">
             <CardContainer>
                 <div>{gameData.host}</div>
                 <FontAwesomeIcon

@@ -12,6 +12,8 @@ const RoleName = styled.div`
   margin-top: 20px;
   text-align: center;
   padding: 5px;
+  font-weight: 600;
+  text-transform: uppercase;
 `;
 
 const RoleCardContainer = styled.div`
@@ -20,12 +22,16 @@ const RoleCardContainer = styled.div`
   align-items: center;
 `;
 
-const RoleCard = () => {
+const RoleCard = ({ gameData, socket }) => {
+
+  const player = gameData.players.find(player => player.id === socket.id)
+
   return (
-    <Card color="#C8FFF2">
+    <Card color="#C8FFF2" height="100%">
       <RoleCardContainer>
         <FontAwesomeIcon icon={faUser} size="6x" color="white" />
-        <RoleName>Spy SARIM SAHIFA HELLO</RoleName>
+        {/* <RoleName>{player.role}</RoleName> */}
+        <RoleName>SAHIFA SARIM HELLO</RoleName>
       </RoleCardContainer>
     </Card>
   );

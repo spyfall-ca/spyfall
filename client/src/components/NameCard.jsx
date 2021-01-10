@@ -17,7 +17,7 @@ const NameCard = ({ socket, gameData }) => {
   const player = gameData.players.find(player => player.id === socket.id)
   
   return (
-      <Card color="#C8FFF2">
+      <Card color="#C8FFF2" height="100%">
         <CardContainer>
           <FontAwesomeIcon
             icon={faPoo}

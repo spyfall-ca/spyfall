@@ -12,12 +12,6 @@ const StyledTitleText = styled.div`
   margin: 20px;
 `;
 
-const StyledParagraphText = styled.div`
-  font-size: 15px;
-  margin: 20px;
-  font-weight: 600;
-`;
-
 const StyledModal = styled.div`
   position: fixed;
   width: 350px;
@@ -46,19 +40,23 @@ const ModalOverlay = styled.div`
   background: rgba(0, 0, 0, 0.6);
 `;
 
-export const EndGameCard = ({ socket, gameData }) => {
+const ButtonContainer = styled.div`
+width: 100%;
+display: flex;
+justify-content: flex-end;
+`;
+
+export const RevealPlayerModal = ({ socket}) => {
   const [showModal, setShowModal] = useState(false);
+  const [spyName, setSpyName] = useState('')
 
-  const player = gameData.players.find(player => player.role === "Spy")
-
-  const handlePlayAgain = () => {
-    setShowModal(!showModal);
-    socket.emit("startNewGame", false);
-  };
+  socket.on("revealSpy", (spy) => {
+    setSpyName(spy)
+    setShowModal(true)
+  })
 
   return (
    <React.Fragment>
-    <div style={{height: '100%'}}>
       <StyledModal showModal={showModal}>
         <Card>
           <StyledCloseDiv>
@@ -66,50 +64,25 @@ export const EndGameCard = ({ socket, gameData }) => {
               icon={faTimes}
               size="xs"
               style={{ float: "right" }}
-              onClick={() => setShowModal(!showModal)}
+              onClick={() => setShowModal(false)}
             />
           </StyledCloseDiv>
-          <StyledTitleText> Are you sure? </StyledTitleText>
-          <StyledParagraphText>
-            would you like to play again?
-          </StyledParagraphText>
-          <div
-            style={{
-              flexDirection: "row",
-              display: "flex",
-              justifyContent: "space-between",
-              margin: 20,
-            }}
-          >
+          <StyledTitleText> {spyName} was the spy! </StyledTitleText>
+          <ButtonContainer>
             <Button
               color="#7331FF"
               onClick={() => setShowModal(false)}
               fontSize="15px"
+              padding="12px 25px 12px 25px"
             >
-              cancel
+              okay
             </Button>
-            <Button
-              color="#FFC531"
-              onClick={() => handlePlayAgain()}
-              fontSize="15px"
-            >
-              play again
-            </Button>
-          </div>
+          </ButtonContainer>
         </Card>
       </StyledModal>
-      <Button
-        color="#FF4d35"
-        disabled={socket.id === gameData.host ? false : true}
-        onClick={() => setShowModal(!showModal)}
-        height="100%"
-      >
-        end game
-      </Button>
-    </div>
     {showModal && <ModalOverlay />}
     </React.Fragment>
   );
 };
 
-export default EndGameCard;
+export default RevealPlayerModal;

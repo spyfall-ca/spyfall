@@ -23,30 +23,39 @@ const FormCardContainer = styled.div`
 const Home = (props) => {
   const [roomCode, setRoomCode] = useState("");
   const [playerName, setPlayerName] = useState("");
-  const [error, setErrors] = useState("")
-  
+  const [error, setErrors] = useState("");
+
   const isPlayerNameValid = () => {
-    if (playerName === '') {
-        setErrors('Invalid Name')
-        return false;
+    if (playerName === "") {
+      setErrors("Invalid Name");
+      return false;
+    } else if (playerName.length > 15) {
+      setErrors("Too Many Characters");
+      return false;
     } else {
-        return true;
+      return true;
     }
-  }
+  };
 
   const createRoom = () => {
-    if (!isPlayerNameValid()) return
+    if (!isPlayerNameValid()) return;
     props.socket.emit("createRoom", playerName);
   };
 
   const joinRoom = () => {
-    if (!isPlayerNameValid()) return
+    if (!isPlayerNameValid()) return;
     props.socket.emit("joinRoom", roomCode, playerName);
   };
 
-  props.socket && props.socket.on('Error', errorType => {
-    setErrors(errorType)
-  })
+  const nameErrors = () => {
+    if(error === "Invalid Name" || error === "Too Many Characters") return error
+    return
+  }
+
+  props.socket &&
+    props.socket.on("Error", (errorType) => {
+      setErrors(errorType);
+    });
 
   return (
     <FormCardContainer>
@@ -57,21 +66,23 @@ const Home = (props) => {
               label="player name"
               value={playerName}
               onChange={(e) => {
-                  if(error === "Invalid Name") setErrors('')
-                  setPlayerName(e.target.value)
+                if (error === "Invalid Name" || error === "Too Many Characters")
+                  setErrors("");
+                setPlayerName(e.target.value);
               }}
               placeholder="BillyBobJoe"
-              error={error === "Invalid Name" ? error : ''}
+              error={nameErrors()}
             />
           </div>
           <Input
             label="join a room"
             value={roomCode}
             onChange={(e) => {
-                if(error === "Invalid Room ID") setErrors('')
-                setRoomCode(e.target.value)}}
+              if (error === "Invalid Room ID") setErrors("");
+              setRoomCode(e.target.value);
+            }}
             placeholder="M59Ss26jyKu..."
-            error={error === "Invalid Room ID" ? error : ''}
+            error={error === "Invalid Room ID" ? error : ""}
           />
         </InputContainer>
         <ButtonContainer>

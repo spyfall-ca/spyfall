@@ -8,15 +8,17 @@ import TimeCard from "../components/TimeCard";
 import RoomCodeCard from "../components/RoomCodeCard";
 import RulesCard from "../components/RulesCard";
 import Button from "../components/Button";
+import InProgressModal from "../components/InProgressModal";
+import RevealPlayerModal from "../components/RevealPlayerModal";
 
 const LobbyContainer = styled.div`
   display: grid;
-  grid-template-columns: 30% 75%;
-  grid-template-rows: 15% 75%;
+  grid-template-columns: 1fr 3fr;
+  grid-template-rows: 1fr 350px;
   max-width: 750px;
-  align-content: stretch;
   column-gap: 20px;
   row-gap: 10px;
+  height: 410px;
 `;
 
 const TopButtonsContainer = styled.div`
@@ -55,14 +57,17 @@ const PlayersCardContainer = styled.div`
   grid-column-end: 2;
   grid-row-start: 2;
   grid-row-end: 3;
-  align-self: stretch;
 `;
 
-const Lobby = ({ socket, gameData }) => {
+const Lobby = ({
+  socket,
+  gameData,
+  setShowInProgressModal,
+  showInProgressModal,
+}) => {
   const [startGame, setStartGame] = useState(false);
 
   socket.on("startGameSuccess", (boolean) => {
-    console.log("YOOOOO")
     setStartGame(boolean);
   });
 
@@ -82,23 +87,32 @@ const Lobby = ({ socket, gameData }) => {
     );
   };
 
-  return startGame === true ? (
-    <Game socket={socket} gameData={gameData} />
-  ) : (
-    <LobbyContainer>
-      <NameCardContainer>
-        <NameCard socket={socket} gameData={gameData} />
-      </NameCardContainer>
-      <PlayersCardContainer>
-        <PlayersCard socket={socket} gameData={gameData} />
-      </PlayersCardContainer>
-      <TopButtonsContainer>
-        <TopButtons socket={socket} gameData={gameData} />
-      </TopButtonsContainer>
-      <RulesCardContainer>
-        <RulesCard />
-      </RulesCardContainer>
-    </LobbyContainer>
+  return (
+    <React.Fragment>
+      {startGame === true && gameData.inProgress ? (
+        <Game socket={socket} gameData={gameData} />
+      ) : (
+        <LobbyContainer>
+          <NameCardContainer>
+            <NameCard socket={socket} gameData={gameData} />
+          </NameCardContainer>
+          <PlayersCardContainer>
+            <PlayersCard socket={socket} gameData={gameData} />
+          </PlayersCardContainer>
+          <TopButtonsContainer>
+            <TopButtons socket={socket} gameData={gameData} />
+          </TopButtonsContainer>
+          <RulesCardContainer>
+            <RulesCard />
+          </RulesCardContainer>
+          <InProgressModal
+            showModal={showInProgressModal}
+            setShowModal={setShowInProgressModal}
+          />
+        </LobbyContainer>
+      )}
+      <RevealPlayerModal socket={socket} />
+    </React.Fragment>
   );
 };
 
