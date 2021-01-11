@@ -2,7 +2,7 @@ const express = require("express")
 const http = require("http")
 const socketIo = require("socket.io")
 
-const port = process.env.PORT || 6190
+const port = 6190
 const router = require('./router')
 const app = express()
 app.use(router)
@@ -214,5 +214,5 @@ io.on("connection", (socket) => {
 });
 
 server.listen(port, () => {
-  console.log('running on port')
+  console.log('running on port', port)
 })
