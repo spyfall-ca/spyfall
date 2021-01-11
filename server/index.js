@@ -2,7 +2,7 @@ const express = require("express")
 const http = require("http")
 const socketIo = require("socket.io")
 
-const port = process.env.PORT || 5000
+const port = process.env.PORT || 6190
 const router = require('./router')
 const app = express()
 app.use(router)
@@ -11,7 +11,7 @@ const server = http.createServer(app)
 
 const io = socketIo(server, {
   cors: {
-    origin: "http://localhost:3000",
+    origin: "http://localhost:5000",
     methods: ["GET", "POST"]
   }
 })
