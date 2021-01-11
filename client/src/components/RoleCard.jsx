@@ -30,8 +30,7 @@ const RoleCard = ({ gameData, socket }) => {
     <Card color="#C8FFF2" height="100%">
       <RoleCardContainer>
         <FontAwesomeIcon icon={faUser} size="6x" color="white" />
-        {/* <RoleName>{player.role}</RoleName> */}
-        <RoleName>SAHIFA SARIM HELLO</RoleName>
+        <RoleName>{player.role}</RoleName>
       </RoleCardContainer>
     </Card>
   );
